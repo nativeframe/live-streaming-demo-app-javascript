@@ -1,0 +1,17 @@
+{
+  "name": "live-streaming-demo-app-javascript",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start:api": "cd api && npm start",
+    "start:client": "cd client && npm start",
+    "start": "concurrently --names \"API,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run start:api\" \"npm run start:client\"",
+    "install:all": "npm install && cd api && npm install && cd ../client && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

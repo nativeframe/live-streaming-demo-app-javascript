@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script src="./javaScript/globalConfigs.js"></script>
+    <script src="./javaScript/fetchViewers.js"></script>
+    <script src="./javaScript/encoder.js"></script>
+    <script src="./javaScript/auth.js"></script>
+    <script src="./javaScript/utils/token.js"></script>
+    <script src="./javaScript/videoClientLib.js"></script>
+    <script src="./javaScript/utils/names.js"></script>
+    <style>
+      .highlight {
+        background-color: #007FFF;
+        color: #fff;
+      }
+    </style>
+    <h1>Live Streaming Demo App</h1>
+    <div id="auth-type">
+      <p>Select an authentication option</p>
+      <button id="auth0">Auth0</button>
+      <button id="clientToken">Client Token</button>
+    </div>
+    <div id="auth0-controls">
+      <button id="login">Login</button>
+      <button id="logout">Logout</button>
+      <div id="profile"></div>
+    </div>
+    <div id="video">
+      <div id="videoWrapper"></div>
+      <button id="videoButton">Stop Video</button>
+      <button id="muteButton">Mute</button>
+      <button id="fullScreenButton">FullScreen</button>
+      <button id="broadcastButton">Start Broadcast</button>
+      <div id="viewers"></div>
+    </div>
+  </body>
+  <script>
+    window.onload = async function () {
+      const videoDiv = document.getElementById('video');
+      const authDiv = document.getElementById('auth-type');
+      const auth0ControlsDiv = document.getElementById('auth0-controls');
+      let authType = '';
+      if (window.location.href.includes('code=')) {
+        console.log('auth0-redirect');
+        authType = 'auth0-redirect';
+        videoDiv.style.display = 'block';
+        authDiv.style.display = 'none';
+        await useAuth0();
+      } else {
+        auth0ControlsDiv.style.display = 'none';
+        videoDiv.style.display = 'none';
+        document.getElementById('auth0').addEventListener('click', async () => {
+          authType = 'auth0';
+          authDiv.style.display = 'none';
+          auth0ControlsDiv.style.display = 'block';
+          await useAuth0();
+        });
+        document.getElementById('clientToken').addEventListener('click', async () => {
+          authType = 'clientToken';
+          authDiv.style.display = 'none';
+          videoDiv.style.display = 'block';
+          await useClientToken();
+        });
+      }
+    
+    }
+  </script>
+</html>
