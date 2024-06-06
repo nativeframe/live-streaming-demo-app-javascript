@@ -16,17 +16,14 @@
       }
     </style>
     <h1>Live Streaming Demo App</h1>
-    <div id="auth-type">
-      <p>Select an authentication option</p>
-      <button id="auth0">Auth0</button>
-      <button id="clientToken">Client Token</button>
-    </div>
+    <p>Auth type: <span id="auth-type"></span></p>
     <div id="auth0-controls">
       <button id="login">Login</button>
       <button id="logout">Logout</button>
       <div id="profile"></div>
     </div>
     <div id="video">
+      <h2>Broadcaster</h2>
       <div id="videoWrapper"></div>
       <button id="videoButton">Stop Video</button>
       <button id="muteButton">Mute</button>
@@ -34,36 +31,28 @@
       <button id="broadcastButton">Start Broadcast</button>
       <div id="viewers"></div>
     </div>
+    <div id="viewer">
+      <p>Open viewer</p>
+      <a href="./manifestPlayer.html" target="_blank">Player</a>
+    </div>
   </body>
   <script>
     window.onload = async function () {
+      document.getElementById('auth-type').textContent = window.config.authType;
       const videoDiv = document.getElementById('video');
       const authDiv = document.getElementById('auth-type');
       const auth0ControlsDiv = document.getElementById('auth0-controls');
-      let authType = '';
-      if (window.location.href.includes('code=')) {
-        console.log('auth0-redirect');
-        authType = 'auth0-redirect';
-        videoDiv.style.display = 'block';
-        authDiv.style.display = 'none';
-        await useAuth0();
-      } else {
-        auth0ControlsDiv.style.display = 'none';
+      if (window.config.authType === 'auth0') {
+        auth0ControlsDiv.style.display = 'block';
         videoDiv.style.display = 'none';
-        document.getElementById('auth0').addEventListener('click', async () => {
-          authType = 'auth0';
-          authDiv.style.display = 'none';
-          auth0ControlsDiv.style.display = 'block';
-          await useAuth0();
-        });
-        document.getElementById('clientToken').addEventListener('click', async () => {
-          authType = 'clientToken';
-          authDiv.style.display = 'none';
-          videoDiv.style.display = 'block';
-          await useClientToken();
-        });
+        await auth(window.config.authType)
+      } else if (window.config.authType === 'token') {
+        auth0ControlsDiv.style.display = 'none';
+        videoDiv.style.display = 'block';
+        await auth(window.config.authType)
+      } else {
+        document.getElementById('auth-type').textContent = 'Unknown auth type';
       }
-    
     }
   </script>
 </html>

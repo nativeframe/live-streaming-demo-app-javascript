@@ -34,7 +34,7 @@
         // ** REQUIRED **
         // You must add your service endpoint here in order to use this demo.
         // ** REQUIRED **
-        const response = await fetch(`${serviceEndpoint}/live-streams`);
+        const response = await fetch(`${window.config.serviceEndpoint}/live-streams`);
         const data = await response.json();
 
         // Store the results for the streams.
@@ -89,7 +89,7 @@
             }
           };
           // Create our token using our fetchToken helper function.
-          const token = await fetchToken(tokenOptions, serviceEndpoint);
+          const token = await fetchToken(tokenOptions, window.config.serviceEndpoint);
 
           manifest = manifest + "=" + token;
 
