@@ -2,6 +2,7 @@
   "name": "live-streaming-demo-app-javascript",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "typescript": "^4.9.5"
   },

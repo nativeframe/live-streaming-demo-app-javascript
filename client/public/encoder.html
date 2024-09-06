@@ -2,21 +2,26 @@
 <html>
   <body>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-    <script src="./javaScript/globalConfigs.js"></script>
-    <script src="./javaScript/fetchViewers.js"></script>
-    <script src="./javaScript/encoder.js"></script>
-    <script src="./javaScript/auth.js"></script>
-    <script src="./javaScript/utils/token.js"></script>
-    <script src="./javaScript/videoClientLib.js"></script>
-    <script src="./javaScript/utils/names.js"></script>
+    <script src="./js/globalConfigs.js"></script>
+    <script src="./js/fetchViewers.js"></script>
+    <script src="./js/encoder.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/utils/token.js"></script>
+    <script src="./js/videoClientCore.js"></script>
+    <script src="./js/utils/names.js"></script>
     <style>
       .highlight {
         background-color: #007FFF;
         color: #fff;
       }
     </style>
-    <h1>Live Streaming Demo App</h1>
-    <p>Auth type: <span id="auth-type"></span></p>
+    <h1>Live Streaming Demo App (Pure JavaScript)</h1>
+    <div id="api-controls">
+      <p>Auth type: <span id="auth-type"></span></p>
+      <p>Project ID: <span id="project-id"></span></p>
+      <button id="create-stream">Create Stream</button>
+      <p id="stream-id-display">Stream ID: <span id="stream-id"></span></p>
+    </div>
     <div id="auth0-controls">
       <button id="login">Login</button>
       <button id="logout">Logout</button>
@@ -39,17 +44,31 @@
   <script>
     window.onload = async function () {
       document.getElementById('auth-type').textContent = window.config.authType;
+      document.getElementById('project-id').textContent = window.config.projectId;
       const videoDiv = document.getElementById('video');
       const authDiv = document.getElementById('auth-type');
       const auth0ControlsDiv = document.getElementById('auth0-controls');
+      const viewerDiv = document.getElementById('viewer');
+      const createStreamButton = document.getElementById('create-stream');
+      const streamIdDisplay = document.getElementById('stream-id-display');
       if (window.config.authType === 'auth0') {
         auth0ControlsDiv.style.display = 'block';
         videoDiv.style.display = 'none';
+        createStreamButton.style.display = 'none';
         await auth(window.config.authType)
       } else if (window.config.authType === 'token') {
         auth0ControlsDiv.style.display = 'none';
-        videoDiv.style.display = 'block';
-        await auth(window.config.authType)
+        videoDiv.style.display = 'none';
+        viewerDiv.style.display = 'none';
+        streamIdDisplay.style.display = 'none';
+        document.getElementById('create-stream').addEventListener('click', async () => {
+          await createStream();
+          await auth(window.config.authType);
+          videoDiv.style.display = 'block';
+          viewerDiv.style.display = 'block';
+          streamIdDisplay.style.display = 'block';
+          createStreamButton.style.display = 'none';
+        });
       } else {
         document.getElementById('auth-type').textContent = 'Unknown auth type';
       }

@@ -85,9 +85,9 @@ async function encoder(vc, VideoClient) {
       broadcast.textContent = "Start Broadcast";
     }
     // Options to be passed to the broadcast.
-    let broadcastOptions = { streamName: "demo" };
+    let broadcastOptions = { streamName: window.config.streamId };
     // Create the call.
-    let call = await vc.createCall({ userId: "yourUserId" });
+    let call = await vc.createCall({ userId: window.config.user });
     // If you are not broadcasting and the call exists.
     if (!broadcasting && call != null) {
       // Create the broadcast and pass the mediaStreamController and broadcastOptions as arguments (It is recommended to always use a return value for this method).
@@ -96,7 +96,7 @@ async function encoder(vc, VideoClient) {
       broadcasting = true;
       // Starts polling for viewers watching the broadcast.
       // The list of viewers returned from the server is then displayed in the viewers div.
-      startPollingForViewers(call.id);
+      // startPollingForViewers(call.id);
     }
     // If you are broadcasting and want to end the broadcast.
     else {
