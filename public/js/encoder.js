@@ -29,7 +29,6 @@ async function encoder(vc, VideoClient) {
     video = VideoClient.adapter.device.createVideoElement();
     // Set a width for the video (this can be done separately if needed).
     video.style.objectFit = 'cover'
-    // video.style.height = "100%";
     video.style.width = "40%";
     // Set the local previews audio to mute so you don't hear yourself.
     preview.localAudioMuted = true;
@@ -97,6 +96,7 @@ async function encoder(vc, VideoClient) {
       // Starts polling for viewers watching the broadcast.
       // The list of viewers returned from the server is then displayed in the viewers div.
       // startPollingForViewers(call.id);
+      document.getElementById("viewer").style.display = "block";
     }
     // If you are broadcasting and want to end the broadcast.
     else {
@@ -104,7 +104,7 @@ async function encoder(vc, VideoClient) {
       call.dispose();
       // Set broadcasting to false.
       broadcasting = false;
-
+      
       stopPollingForViewers(call.id);
       clearViewers();
     }

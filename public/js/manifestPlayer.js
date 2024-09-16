@@ -62,6 +62,20 @@ function addPlayer(player) {
     }
     const container = document.getElementById("player-container");
 
+    // Create the Player Wrapper.
+    const playerWrapper = document.createElement("div");
+    playerWrapper.id = "player-wrapper";
+    container.appendChild(playerWrapper);
+
+    // Create our VideoElement using the Video Client and attach our player to it.
+    const videoEl = VideoClient.adapter.device.createVideoElement();
+    videoEl.style.objectFit = 'cover'
+    videoEl.style.width = "40%";
+    player.attachTo(videoEl);
+
+    // Finally we append our player to our playerWrapper.
+    document.getElementById("player-wrapper").appendChild(videoEl);
+
     // If we don't have a wrapper the buttons haven't been created yet, so lets create them.
     if (!wrapper) {
       // Create and append the play/pause button.
@@ -93,21 +107,6 @@ function addPlayer(player) {
         .getElementById("player-full-screen-button")
         .addEventListener("click", handlePlayerFullScreen);
     }
-
-    // Create the Player Wrapper.
-    const playerWrapper = document.createElement("div");
-    playerWrapper.id = "player-wrapper";
-    container.appendChild(playerWrapper);
-
-    // Create our VideoElement using the Video Client and attach our player to it.
-    const videoEl = VideoClient.adapter.device.createVideoElement();
-    videoEl.style.objectFit = 'cover'
-    videoEl.style.height = "40%";
-    videoEl.style.width = "40%";
-    player.attachTo(videoEl);
-
-    // Finally we append our player to our playerWrapper.
-    document.getElementById("player-wrapper").appendChild(videoEl);
   }
 }
 
