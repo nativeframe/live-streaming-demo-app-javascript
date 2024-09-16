@@ -7,7 +7,7 @@ function handlePlayerPlay() {
   // Ensure the player exists.
   if (playerVideo) {
     // Changing the text of the playbutton to play/pause dependent of state.
-    const video = document.getElementById("playerPlayButton");
+    const video = document.getElementById("player-play-button");
     let text = video.textContent;
     if (text === "Pause") {
       video.textContent = "Play";
@@ -26,7 +26,7 @@ function handlePlayerMute() {
   // Ensure the playerVideo exists.
   if (playerVideo) {
     // Changing the text of the mutebutton mute/unmute dependent of state.
-    const mute = document.getElementById("playerMuteButton");
+    const mute = document.getElementById("player-mute-button");
     let text = mute.textContent;
     if (text === "Mute") {
       mute.textContent = "Unmute";
@@ -44,7 +44,7 @@ function handlePlayerMute() {
 function handlePlayerFullScreen() {
   // Ensure the player exists.
   if (playerVideo) {
-    document.getElementById("playerWrapper").requestFullscreen();
+    document.getElementById("player-wrapper").requestFullscreen();
   }
 }
 
@@ -56,69 +56,68 @@ function addPlayer(player) {
     )
   ) {
     // Check to see if you already have a wrapper containing a player and remove it if so.
-    const wrapper = document.getElementById("playerWrapper");
+    const wrapper = document.getElementById("player-wrapper");
     if (wrapper) {
       wrapper.remove();
     }
-    const container = document.getElementById("container");
+    const container = document.getElementById("player-container");
 
     // If we don't have a wrapper the buttons haven't been created yet, so lets create them.
     if (!wrapper) {
       // Create and append the play/pause button.
       const playerPlayButton = document.createElement("button");
-      playerPlayButton.id = "playerPlayButton";
+      playerPlayButton.id = "player-play-button";
       playerPlayButton.textContent = "Pause";
       container.appendChild(playerPlayButton);
 
       // Create and append the mute/unmute button.
       const playerMuteButton = document.createElement("button");
-      playerMuteButton.id = "playerMuteButton";
+      playerMuteButton.id = "player-mute-button";
       playerMuteButton.textContent = "Mute";
       container.appendChild(playerMuteButton);
 
       // Create and append the fullscreen button.
       const playerFullScreenButton = document.createElement("button");
-      playerFullScreenButton.id = "playerFullScreenButton";
+      playerFullScreenButton.id = "player-full-screen-button";
       playerFullScreenButton.textContent = "FullScreen";
       container.appendChild(playerFullScreenButton);
 
       // Event listeners to trigger our click handler functions when button elements are clicked.
       document
-        .getElementById("playerPlayButton")
+        .getElementById("player-play-button")
         .addEventListener("click", handlePlayerPlay);
       document
-        .getElementById("playerMuteButton")
+        .getElementById("player-mute-button")
         .addEventListener("click", handlePlayerMute);
       document
-        .getElementById("playerFullScreenButton")
+        .getElementById("player-full-screen-button")
         .addEventListener("click", handlePlayerFullScreen);
     }
 
     // Create the Player Wrapper.
     const playerWrapper = document.createElement("div");
-    playerWrapper.id = "playerWrapper";
+    playerWrapper.id = "player-wrapper";
     container.appendChild(playerWrapper);
 
     // Create our VideoElement using the Video Client and attach our player to it.
     const videoEl = VideoClient.adapter.device.createVideoElement();
     videoEl.style.objectFit = 'cover'
-    videoEl.style.height = "100%";
-    videoEl.style.width = "100%";
+    videoEl.style.height = "40%";
+    videoEl.style.width = "40%";
     player.attachTo(videoEl);
 
     // Finally we append our player to our playerWrapper.
-    document.getElementById("playerWrapper").appendChild(videoEl);
+    document.getElementById("player-wrapper").appendChild(videoEl);
   }
 }
 
 // Function to create our VideoClient instance and call to create our player.
-function createVideoClient(manifestUrl, VideoClient, endpoint) {
+async function createVideoClient(manifestUrl, VideoClient, streamId) {
+  const options = await getViewerOptions(streamId);
+  console.log("options", options);
   // If we don't have a player yet we don't have a VideoClient instance and need to create one.
   if (playerVideo === null) {
-    vc = new VideoClient.VideoClient({
-      backendEndpoints: [endpoint],
-    });
-
+    vc = new VideoClient.VideoClient(options);
     // If we already have a player we need to dispose of the old one so we can replace it with a new one.
     if (playerVideo != null) {
       playerVideo.dispose();
@@ -136,4 +135,36 @@ function createVideoClient(manifestUrl, VideoClient, endpoint) {
   addPlayer(playerVideo);
 
   return false;
+}
+
+async function getManifestUrl(streamId) {
+  try {
+    const response = await fetch(`${window.config.backendEndpoint}/program/api/v1/projects/${window.config.projectId}/streams/${streamId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${window.config.serviceJwt}`
+      },
+    });
+    const data = await response.json();
+    if (data && data.manifestUrl) {
+      return data.manifestUrl;
+    } else {
+      console.error('No manifestUrl found');
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
+async function viewStream() {
+  if (!window.config.streamId) {
+    console.error("No streamId provided");
+    return;
+  }
+  const manifestUrl = await getManifestUrl(window.config.streamId);
+  console.log("manifestUrl", manifestUrl);
+  let manifest = `https://${manifestUrl}/live/${window.config.streamId}.json`;
+  console.log("manifest", manifest);
+  await createVideoClient(manifest, VideoClient, window.config.streamId) 
 }

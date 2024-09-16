@@ -42,7 +42,7 @@ async function encoder(vc, VideoClient) {
 
   // Click handler for hiding/showing the video.
   function handleVideo() {
-    const video = document.getElementById("videoButton");
+    const video = document.getElementById("video-button");
     let text = video.textContent;
     if (text === "Stop Video") {
       video.textContent = "Start Video";
@@ -56,7 +56,7 @@ async function encoder(vc, VideoClient) {
   }
   // Click handler for muting/unmuting the video.
   function handleMute() {
-    const mute = document.getElementById("muteButton");
+    const mute = document.getElementById("mute-button");
     let text = mute.textContent;
     if (text === "Mute") {
       mute.textContent = "Unmute";
@@ -76,7 +76,7 @@ async function encoder(vc, VideoClient) {
   let broadcasting = false;
   // Click handler for creating the call and broadcasting/ending the broadcast/closing the call.
   async function handleBroadcast() {
-    const broadcast = document.getElementById("broadcastButton");
+    const broadcast = document.getElementById("broadcast-button");
     broadcast.classList.toggle("highlight");
     let text = broadcast.textContent;
     if (text === "Start Broadcast") {
@@ -112,15 +112,15 @@ async function encoder(vc, VideoClient) {
 
   // Adding event listeners for each button to user our handler methods above.
   document
-    .getElementById("videoButton")
+    .getElementById("video-button")
     .addEventListener("click", handleVideo, false);
   document
-    .getElementById("muteButton")
+    .getElementById("mute-button")
     .addEventListener("click", handleMute, false);
   document
-    .getElementById("fullScreenButton")
+    .getElementById("full-screen-button")
     .addEventListener("click", handleFullScreen, false);
   document
-    .getElementById("broadcastButton")
+    .getElementById("broadcast-button")
     .addEventListener("click", handleBroadcast, false);
 }

@@ -10,7 +10,6 @@ async function fetchToken(options) {
         });
         const body = await response.json();
         videoJwt = body.token;
-        console.log("refreshed video-jwt", videoJwt);
         return videoJwt;
     } catch (error) {
         console.error("unable to get access token", {
@@ -21,16 +20,14 @@ async function fetchToken(options) {
 };
 
 // Functions as a Refresher for fetching our token
-async function tokenRefresher(user, streamId, kid) {
+async function tokenRefresher(user, streamId, kid, scopes) {
     // You need to return a promise for this to work properly
     return async () =>  {
         let token;
         const options = {
             "kid": kid,
             "videoToken": {
-              "scopes": [
-                "broadcaster"
-              ],
+              "scopes": scopes,
               "userId": user,
               "ttl": 86400,
               "data": {

@@ -4,6 +4,8 @@
     <script src="./js/globalConfigs.js"></script>
     <script src="./js/videoClientCore.js"></script>
     <script src="./js/utils/token.js"></script>
+    <script src="./js/utils/names.js"></script>
+    <script src="./js/auth.js"></script>
     <script src="./js/manifestPlayer.js"></script>
     <style>
       .highlight {
@@ -31,18 +33,6 @@
     // Function that calls our live-streams endpoint to get all streams from one environment.
     async function getStreams() {
       try {
-        // ** REQUIRED **
-        // You must add your service endpoint here in order to use this demo.
-        // ** REQUIRED **
-        // console.log('test', window.config.serviceEndpoint)
-        // const response = await fetch(`${window.config.serviceEndpoint}/live-streams`);
-        // const data = await response.json();
-
-        // // Store the results for the streams.
-        // streamResults = data;
-
-        // // We are using this function to display all of our streams and make them clickable.
-        // await displayResults();
         const response = await fetch(`${window.config.backendEndpoint}/program/api/v1/projects/${window.config.projectId}/streams?active=true`, {
           method: 'GET',
           headers: {
@@ -53,10 +43,8 @@
         const data = await response.json();
         if (data && data.streams && Array.isArray(data.streams)) {
           streamResults = data.streams;
-          console.log('streamResults', streamResults);
         } else {
           // there are no active streams
-          console.log('no active streams');
           document.getElementById('streams-list').innerHTML = '<p>No active streams</p>';
           return;
         }
@@ -88,34 +76,8 @@
         stream.style.cursor = "pointer";
         // On click we are taking the selected stream and playing it with our Manifest Player.
         stream.addEventListener("click", async () => {
-          // We need to remove the old token provided.
           let manifest = `https://${result.manifestUrl}/live/${result.id}.json`;
-          console.log('manifest', manifest);
-          console.log('result.id', result.id);
-          // Now we are grabbing our streamkey so we can use it in our token request.
-          // let streamKey = manifest.split('/');
-
-          // streamKey = streamKey[streamKey.length - 1];
-
-          // streamKey = streamKey.slice(0, streamKey.lastIndexOf('.'));
-
-          // Options for our token request.
-          // const tokenOptions = {
-          //   scopes: ['private-viewer'], // Scope for viewers.
-          //   userId: 'viewer', // Replace this with your userId.
-          //   ttl: 1800, // How long the token lasts, this would be 30 minutes.
-          //   data:{
-          //     displayName:"viewer", // Replace with your displayName.
-          //     streamKey: result.streamId, // The streamKey we extracted from the manifestUrl above.
-          //   }
-          // };
-          // // Create our token using our fetchToken helper function.
-          // const token = await fetchToken(tokenOptions, window.config.serviceEndpoint);
-
-          // manifest = manifest + "=" + token;
-
-          // Now that we have our token we pass the manifest url with a valid token to our VideoClient instance to create our player.
-          createVideoClient(manifest, VideoClient, window.config.backendEndpoint) 
+          await createVideoClient(manifest, VideoClient, result.id) 
         });
         streamsList.appendChild(stream);
       });

@@ -9,36 +9,43 @@
     <script src="./js/utils/token.js"></script>
     <script src="./js/videoClientCore.js"></script>
     <script src="./js/utils/names.js"></script>
+    <script src="./js/manifestPlayer.js"></script>
     <style>
       .highlight {
         background-color: #007FFF;
         color: #fff;
       }
     </style>
-    <h1>Live Streaming Demo App (Pure JavaScript)</h1>
-    <div id="api-controls">
-      <p>Auth type: <span id="auth-type"></span></p>
-      <p>Project ID: <span id="project-id"></span></p>
-      <button id="create-stream">Create Stream</button>
-      <p id="stream-id-display">Stream ID: <span id="stream-id"></span></p>
-    </div>
-    <div id="auth0-controls">
-      <button id="login">Login</button>
-      <button id="logout">Logout</button>
-      <div id="profile"></div>
-    </div>
-    <div id="video">
-      <h2>Broadcaster</h2>
-      <div id="videoWrapper"></div>
-      <button id="videoButton">Stop Video</button>
-      <button id="muteButton">Mute</button>
-      <button id="fullScreenButton">FullScreen</button>
-      <button id="broadcastButton">Start Broadcast</button>
-      <div id="viewers"></div>
+    <h1>Live Streaming Demo App</h1>
+    <div id="broadcaster">
+      <div id="api-controls">
+        <p>Auth type: <span id="auth-type"></span></p>
+        <p>Project ID: <span id="project-id"></span></p>
+        <button id="create-stream">Create Stream</button>
+        <p id="stream-id-display">Stream ID: <span id="stream-id"></span></p>
+      </div>
+      <div id="auth0-controls">
+        <button id="login">Login</button>
+        <button id="logout">Logout</button>
+        <div id="profile"></div>
+      </div>
+      <div id="video">
+        <h2>Broadcaster</h2>
+        <div id="videoWrapper"></div>
+        <button id="video-button">Stop Video</button>
+        <button id="mute-button">Mute</button>
+        <button id="full-screen-button">FullScreen</button>
+        <button id="broadcast-button">Start Broadcast</button>
+        <div id="viewers"></div>
+      </div>
     </div>
     <div id="viewer">
-      <p>Open viewer</p>
-      <a href="./manifestPlayer.html" target="_blank">Player</a>
+      <h2>Viewer</h2>
+      <!-- <p>Open viewer</p>
+      <a href="./manifestPlayer.html" target="_blank">Player</a> -->
+      <div id="player-container">
+        <button id="view-stream">View Stream</button>
+      </div>
     </div>
   </body>
   <script>
@@ -72,6 +79,10 @@
       } else {
         document.getElementById('auth-type').textContent = 'Unknown auth type';
       }
+
+      document.getElementById('view-stream').addEventListener('click', async () => {
+        await viewStream();
+      });
     }
   </script>
 </html>

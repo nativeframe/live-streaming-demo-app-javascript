@@ -9,11 +9,10 @@ async function auth(authType) {
         return;
     }
     let videoClientOptions;
-
     if (authType === "auth0") {
         videoClientOptions = await useAuth0();
     } else if (authType === "token") {
-        videoClientOptions = await useClientToken();
+        videoClientOptions = await getBroadcasterOptions();
     } else {
         console.error("Invalid authType");
         return;
@@ -23,11 +22,14 @@ async function auth(authType) {
     await encoder(vc, VideoClient);
 }
 
-async function createStream() {
-    // Generate a random user name
+function getUsername() {
     const user = `demoUser${getRandomName()}${Math.floor(Math.random() * 10)}`;
-    window.config.user = user;
+    return user;
+}
 
+async function createStream() {
+    const user = getUsername();
+    window.config.user = user;
     // Create stream
     let streamId;
     try {
@@ -55,14 +57,13 @@ async function createStream() {
     }
 }
 
-async function useClientToken () {
-    // get kid
+async function getKID() {
     let kid;
     try {
         const response = await fetch(`${window.config.backendEndpoint}/auth/v1/jwks?iss=nativeframe?project=${window.config.projectId}`, {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             },
         });
         const body = await response.json();
@@ -72,15 +73,28 @@ async function useClientToken () {
         console.error('Error:', error.message);
         throw error;
     }
+    return kid;
+}
 
-    // Create token refresher using the username, streamId, and kid
-    const token = await tokenRefresher(window.config.user, window.config.streamId, kid);
-    // Encoder SDK options
+async function getBroadcasterOptions () {
+    const kid = await getKID();
+    const token = await tokenRefresher(window.config.user, window.config.streamId, kid, ["broadcaster"]);
     const encoderOptions = {
       backendEndpoints: [window.config.backendEndpoint],
       token: token,
     };
     return encoderOptions;
+}
+
+async function getViewerOptions(streamId) {
+    const kid = await getKID();
+    const user = getUsername();
+    const token = await tokenRefresher(user, streamId, kid, ["viewer"]);
+    const options = {
+        backendEndpoints: [window.config.backendEndpoint],
+        token: token,
+    }
+    return options;
 }
 
 async function useAuth0() {
