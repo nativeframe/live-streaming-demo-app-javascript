@@ -17,9 +17,9 @@ To start a live stream, the broadcaster must authenticate with the Native Frame 
 
 1. From the [Native Frame dashboard](https://dashboard.nativeframe.com), create a new **Manual** project.
 2. Navigate to the **API Keys** page, under the **JSON Web Key Sets (JWKS)** section, find the **Service Account JWK** and click **Generate JWT** button. Copy the generated JWT.
-3. Open `/client/public/js/globalConfig.js` and paste the JWT in the `serviceJwt` variable. 
+3. Open `/public/js/globalConfig.js` and paste the JWT in the `serviceJwt` variable. 
 4. Navigate back to the dashboard and copy the **Project ID**. @todo -- for now, you can find the projectId by pasting the `serviceJwt` in jwt.io and grabbing it from the `iss` field. It's the uuid that comes after `nativeframe?project=`.
-5. Paste the projectId in the `projectId` variable in `/client/public/js/globalConfig.js`.
+5. Paste the projectId in the `projectId` variable in `/public/js/globalConfig.js`.
 6. Now you're ready to go!
 
 <!-- ### Using the Auth0 Option
@@ -144,9 +144,10 @@ curl 'https://dashboard.dev2.devspace.lsea4.livelyvideo.tv/dashboard/api/v1/orga
 
 ## Demo
 
-1. Install the dependencies by running `npm run install:all` from the project's root
-1. Start the client and API services by running `npm run start` from project root
+1. Install the dependencies by running `npm run install`
+1. Start the client by running `npm run start`
 1. Navigate to http://localhost:3000 to start a live stream
+1. Once you're streaming, you can watch the playback by scrolling down and clicking "View Stream"
 
 
 ## Disclaimer
