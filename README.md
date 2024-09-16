@@ -1,4 +1,4 @@
-# Live Streaming Demo App (Pure JavaScript)
+# Live Streaming Demo App
 
 This demo will cover how to start a live stream on the Native Frame platform. 
 
