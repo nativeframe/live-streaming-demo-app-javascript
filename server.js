@@ -7,11 +7,7 @@ const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'encoder.html'));
-});
-
-app.get('/player', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'manifestPlayer.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server

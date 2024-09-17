@@ -5499,5 +5499,6 @@ const names = [
 
 // Random name generator for the demo, all names should be unique.
 function getRandomName() {
-	return names[Math.floor(Math.random() * names.length)];
+	const name = names[Math.floor(Math.random() * names.length)];
+	return `demoUser_${name}`;
 };

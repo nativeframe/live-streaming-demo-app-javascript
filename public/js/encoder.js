@@ -1,3 +1,4 @@
+// Creates the VideoClient instance and initializes the media controller
 async function encoder(vc, VideoClient) {
   // Create your videoClient instance.
   // Initialize and create your mediaController (Note: The media controller should only be initialized once).
@@ -29,8 +30,7 @@ async function encoder(vc, VideoClient) {
     video = VideoClient.adapter.device.createVideoElement();
     // Set a width for the video (this can be done separately if needed).
     video.style.objectFit = 'cover'
-    video.style.height = "100%";
-    video.style.width = "100%";
+    video.style.width = "40%";
     // Set the local previews audio to mute so you don't hear yourself.
     preview.localAudioMuted = true;
     // Attach the video to the videoElement.
@@ -42,7 +42,7 @@ async function encoder(vc, VideoClient) {
 
   // Click handler for hiding/showing the video.
   function handleVideo() {
-    const video = document.getElementById("videoButton");
+    const video = document.getElementById("video-button");
     let text = video.textContent;
     if (text === "Stop Video") {
       video.textContent = "Start Video";
@@ -56,7 +56,7 @@ async function encoder(vc, VideoClient) {
   }
   // Click handler for muting/unmuting the video.
   function handleMute() {
-    const mute = document.getElementById("muteButton");
+    const mute = document.getElementById("mute-button");
     let text = mute.textContent;
     if (text === "Mute") {
       mute.textContent = "Unmute";
@@ -76,7 +76,7 @@ async function encoder(vc, VideoClient) {
   let broadcasting = false;
   // Click handler for creating the call and broadcasting/ending the broadcast/closing the call.
   async function handleBroadcast() {
-    const broadcast = document.getElementById("broadcastButton");
+    const broadcast = document.getElementById("broadcast-button");
     broadcast.classList.toggle("highlight");
     let text = broadcast.textContent;
     if (text === "Start Broadcast") {
@@ -85,9 +85,9 @@ async function encoder(vc, VideoClient) {
       broadcast.textContent = "Start Broadcast";
     }
     // Options to be passed to the broadcast.
-    let broadcastOptions = { streamName: "demo" };
+    let broadcastOptions = { streamName: window.config.streamId };
     // Create the call.
-    let call = await vc.createCall({ userId: "yourUserId" });
+    let call = await vc.createCall({ userId: window.config.user });
     // If you are not broadcasting and the call exists.
     if (!broadcasting && call != null) {
       // Create the broadcast and pass the mediaStreamController and broadcastOptions as arguments (It is recommended to always use a return value for this method).
@@ -96,7 +96,8 @@ async function encoder(vc, VideoClient) {
       broadcasting = true;
       // Starts polling for viewers watching the broadcast.
       // The list of viewers returned from the server is then displayed in the viewers div.
-      startPollingForViewers(call.id);
+      // startPollingForViewers(call.id);
+      document.getElementById("viewer").style.display = "block";
     }
     // If you are broadcasting and want to end the broadcast.
     else {
@@ -104,7 +105,7 @@ async function encoder(vc, VideoClient) {
       call.dispose();
       // Set broadcasting to false.
       broadcasting = false;
-
+      
       stopPollingForViewers(call.id);
       clearViewers();
     }
@@ -112,15 +113,15 @@ async function encoder(vc, VideoClient) {
 
   // Adding event listeners for each button to user our handler methods above.
   document
-    .getElementById("videoButton")
+    .getElementById("video-button")
     .addEventListener("click", handleVideo, false);
   document
-    .getElementById("muteButton")
+    .getElementById("mute-button")
     .addEventListener("click", handleMute, false);
   document
-    .getElementById("fullScreenButton")
+    .getElementById("full-screen-button")
     .addEventListener("click", handleFullScreen, false);
   document
-    .getElementById("broadcastButton")
+    .getElementById("broadcast-button")
     .addEventListener("click", handleBroadcast, false);
 }

@@ -7,7 +7,7 @@ function startPollingForViewers(callId) {
   pollInterval = window.setInterval(async () => {
     try {
       const response = await fetch(
-        `${serviceEndpoint}/viewers-watching/?callId=${callId}`
+        `${window.config.serviceEndpoint}/viewers-watching/?callId=${callId}`
       );
       const data = await response.json();
       updateViewersList(data.viewers);
