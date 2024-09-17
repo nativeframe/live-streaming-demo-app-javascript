@@ -1,3 +1,4 @@
+// Fetches the token from the backend
 async function fetchToken(options) {
     try {
         const response = await fetch(`${window.config.backendEndpoint}/auth/v1/video-jwt`, {

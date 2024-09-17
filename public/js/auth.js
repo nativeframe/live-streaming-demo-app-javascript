@@ -1,3 +1,4 @@
+// Authenticates the user and creates the VideoClient instance
 async function auth(authType) {
     if (
         window.config.backendEndpoint === undefined || 
@@ -22,13 +23,9 @@ async function auth(authType) {
     await encoder(vc, VideoClient);
 }
 
-function getUsername() {
-    const user = `demoUser${getRandomName()}${Math.floor(Math.random() * 10)}`;
-    return user;
-}
-
+// Creates a new public stream in the project
 async function createStream() {
-    const user = getUsername();
+    const user = getRandomName();
     window.config.user = user;
     // Create stream
     let streamId;
@@ -50,13 +47,13 @@ async function createStream() {
         streamId = body["@nativeframe"].streamId;
         document.getElementById('stream-id').textContent = streamId;
         window.config.streamId = streamId;
-        console.log("streamId", streamId);
     } catch (error) {
         console.error('Error:', error.message);
         throw error;
     }
 }
 
+// Retrieves the KID from the project, used to generate a token
 async function getKID() {
     let kid;
     try {
@@ -68,7 +65,6 @@ async function getKID() {
         });
         const body = await response.json();
         kid = body.keys[0].kid;
-        console.log("kid", kid);
     } catch (error) {
         console.error('Error:', error.message);
         throw error;
@@ -76,6 +72,7 @@ async function getKID() {
     return kid;
 }
 
+// Creates the options for the broadcaster
 async function getBroadcasterOptions () {
     const kid = await getKID();
     const token = await tokenRefresher(window.config.user, window.config.streamId, kid, ["broadcaster"]);
@@ -86,77 +83,14 @@ async function getBroadcasterOptions () {
     return encoderOptions;
 }
 
+// Creates the options for the viewer
 async function getViewerOptions(streamId) {
     const kid = await getKID();
-    const user = getUsername();
+    const user = getRandomName();
     const token = await tokenRefresher(user, streamId, kid, ["viewer"]);
     const options = {
         backendEndpoints: [window.config.backendEndpoint],
         token: token,
     }
     return options;
-}
-
-async function useAuth0() {
-    auth0.createAuth0Client({
-        domain: window.config.auth0.domain,
-        clientId: window.config.auth0.clientId,
-        authorizationParams: {
-            redirect_uri: window.location.origin,
-            audience: "https://www.nativeframe.com"
-        },
-        useRefreshTokens: true,
-        cacheLocation: 'localstorage'
-    }).then(async (auth0Client) => {
-        // Assumes a button with id "login" in the DOM
-        const loginButton = document.getElementById("login");
-        loginButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            auth0Client.loginWithRedirect();
-        });
-        if (location.search.includes("state=") && 
-            (location.search.includes("code=") || 
-            location.search.includes("error="))) {
-            await auth0Client.handleRedirectCallback();
-            window.history.replaceState({}, document.title, "/");
-            const jwt = await auth0Client.getTokenSilently();
-            localStorage.setItem('jwt', jwt);
-        }
-        // Assumes a button with id "logout" in the DOM
-        const logoutButton = document.getElementById("logout");
-        logoutButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            auth0Client.logout();
-        });
-        const isAuthenticated = await auth0Client.isAuthenticated();
-        const userProfile = await auth0Client.getUser();
-        // Assumes an element with id "profile" in the DOM
-        const profileElement = document.getElementById("profile");
-        if (isAuthenticated) {
-            profileElement.style.display = "block";
-            profileElement.innerHTML = `
-                    <p>${userProfile.name}</p>
-                    <img id="profile-pic" src="${userProfile.picture}" />
-                `;
-            document.getElementById('video').style.display = "block";
-            document.getElementById('login').style.display = "none";
-        } else {
-            profileElement.style.display = "none";
-        }
-
-        document.getElementById('refresh').addEventListener('click', async () => {
-            const jwt = await auth0Client.getTokenSilently();
-            localStorage.setItem('jwt', jwt);
-            console.log('Token refreshed', jwt);
-        });
-    });
-
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-        const videoClientOptions = {
-            backendEndpoints: [window.config.backendEndpoint],
-            token: jwt,
-        };
-        return videoClientOptions;
-    }
 }

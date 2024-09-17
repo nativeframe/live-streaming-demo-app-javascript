@@ -1,3 +1,4 @@
+// Creates the VideoClient instance and initializes the media controller
 async function encoder(vc, VideoClient) {
   // Create your videoClient instance.
   // Initialize and create your mediaController (Note: The media controller should only be initialized once).

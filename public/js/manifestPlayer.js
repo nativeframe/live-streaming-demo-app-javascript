@@ -48,6 +48,7 @@ function handlePlayerFullScreen() {
   }
 }
 
+// Adds the player to the page
 function addPlayer(player) {
   // Here we are ensuring the Create Video Element feature exists on the current VideoClient.
   if (
@@ -111,9 +112,9 @@ function addPlayer(player) {
 }
 
 // Function to create our VideoClient instance and call to create our player.
+// Note: Video Client instance shouldnt be disposed, player can be disposed and recreated many times.
 async function createVideoClient(manifestUrl, VideoClient, streamId) {
   const options = await getViewerOptions(streamId);
-  console.log("options", options);
   // If we don't have a player yet we don't have a VideoClient instance and need to create one.
   if (playerVideo === null) {
     vc = new VideoClient.VideoClient(options);
@@ -136,6 +137,7 @@ async function createVideoClient(manifestUrl, VideoClient, streamId) {
   return false;
 }
 
+// Retrieves the manifest URL from the backend
 async function getManifestUrl(streamId) {
   try {
     const response = await fetch(`${window.config.backendEndpoint}/program/api/v1/projects/${window.config.projectId}/streams/${streamId}`, {
@@ -156,14 +158,13 @@ async function getManifestUrl(streamId) {
   }
 }
 
+// Retrieves the manifest URL and creates the VideoClient instance
 async function viewStream() {
   if (!window.config.streamId) {
     console.error("No streamId provided");
     return;
   }
   const manifestUrl = await getManifestUrl(window.config.streamId);
-  console.log("manifestUrl", manifestUrl);
   let manifest = `https://${manifestUrl}/live/${window.config.streamId}.json`;
-  console.log("manifest", manifest);
   await createVideoClient(manifest, VideoClient, window.config.streamId) 
 }
