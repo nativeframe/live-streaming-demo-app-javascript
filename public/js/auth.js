@@ -40,6 +40,7 @@ async function createStream() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${window.config.serviceJwt}`
             },
             body: JSON.stringify(options),
         });
