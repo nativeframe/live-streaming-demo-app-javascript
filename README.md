@@ -11,6 +11,14 @@ Before you begin, ensure you have the following installed:
 
 ## Getting Started
 
+Let's start by cloning the repo and installing the dependencies:
+
+```bash
+git clone https://github.com/nativeframe/live-streaming-demo-app-javascript.git
+cd live-streaming-demo-app-javascript
+npm install
+```
+
 To start a live stream, the broadcaster must authenticate with the Native Frame platform. There are two options to authenication - using a Native Frame token, or through [Auth0](https://auth0.com/). Below are steps for both authentication options. If you do not know which to choose, we recommend using the Native Frame token option.
 
 ### Using the Native Frame Token Option
@@ -18,7 +26,7 @@ To start a live stream, the broadcaster must authenticate with the Native Frame 
 1. From the [Native Frame dashboard](https://dashboard.nativeframe.com), create a new **Manual** project.
 2. Navigate to the **API Keys** page, under the **JSON Web Key Sets (JWKS)** section, find the **Service Account JWK** and click **Generate JWT** button. Copy the generated JWT.
 3. Open `/public/js/globalConfig.js` and paste the JWT in the `serviceJwt` variable. 
-4. Navigate back to the dashboard and copy the **Project ID**. @todo -- for now, you can find the projectId by pasting the `serviceJwt` in jwt.io and grabbing it from the `iss` field. It's the uuid that comes after `nativeframe?project=`.
+4. Navigate back to the dashboard and copy the **Project ID** from the project page.
 5. Paste the projectId in the `projectId` variable in `/public/js/globalConfig.js`.
 6. Now you're ready to go!
 
@@ -34,7 +42,6 @@ Next, it's time to configure your Auth0 app in the Auth0 dashboard. [Check out t
 
 ## Demo
 
-1. Install the dependencies by running `npm run install`
 1. Start the client by running `npm run start`
 1. Navigate to http://localhost:3000 to start a live stream
 1. Once you're streaming, you can watch the playback by scrolling down and clicking "View Stream"
