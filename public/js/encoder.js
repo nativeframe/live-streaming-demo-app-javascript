@@ -6,15 +6,14 @@ async function encoder(vc, VideoClient) {
   await VideoClient.mediaController.init();
   let mediaStreamController =
     await VideoClient.mediaController.requestController();
-
   // Set the defaults for your mediaStreamController.
   // Note only call methods/set properties for your video using the mediaStreamController.
   // Calling methods/setting properties on the HTMLVideoElement itself will cause issues with the video.
   mediaStreamController.audioMuted = false;
   mediaStreamController.videoPaused = false;
-  mediaStreamController.audioDeviceId = null;
   mediaStreamController.videoDeviceId =
     VideoClient.mediaController.videoDevices()[0].deviceId;
+  mediaStreamController.audioDeviceId = VideoClient.mediaController.audioDevices()[0].deviceId;
 
   // Request your preview player from the VideoClient.
   const preview = vc.requestPlayer(mediaStreamController);
@@ -81,6 +80,7 @@ async function encoder(vc, VideoClient) {
     let text = broadcast.textContent;
     if (text === "Start Broadcast") {
       broadcast.textContent = "End Broadcast";
+      document.getElementById('viewer').style.display = 'block';
     } else {
       broadcast.textContent = "Start Broadcast";
     }
