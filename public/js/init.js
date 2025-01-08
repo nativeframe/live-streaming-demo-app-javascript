@@ -1,5 +1,5 @@
-// Authenticates the user and creates the VideoClient instance
-async function auth(authType) {
+// Creates the VideoClient options and initializes the VideoClient instance
+async function init(authType) {
     if (
         window.config.backendEndpoint === undefined || 
         window.config.backendEndpoint === '' ||
@@ -13,6 +13,7 @@ async function auth(authType) {
     if (authType === "auth0") {
         videoClientOptions = await useAuth0();
     } else if (authType === "token") {
+        await createStream();
         videoClientOptions = await getBroadcasterOptions();
     } else {
         console.error("Invalid authType");
