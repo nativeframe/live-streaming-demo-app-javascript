@@ -13,6 +13,7 @@ async function init(authType) {
     if (authType === "auth0") {
         videoClientOptions = await useAuth0();
     } else if (authType === "token") {
+        await createStream();
         videoClientOptions = await getBroadcasterOptions();
     } else {
         console.error("Invalid authType");

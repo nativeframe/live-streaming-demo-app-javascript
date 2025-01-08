@@ -2,9 +2,8 @@
 <html>
   <body>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-    <script src="./js/globalConfigs.js"></script>
+    <script src="./js/globalConfig.js"></script>
     <script src="./js/utils/names.js"></script>
-    <script src="./js/fetchViewers.js"></script>
     <script src="./js/encoder.js"></script>
     <script src="./js/auth0.js"></script>
     <script src="./js/init.js"></script>
@@ -71,7 +70,6 @@
         viewerDiv.style.display = 'none';
         streamIdDisplay.style.display = 'none';
         document.getElementById('create-stream').addEventListener('click', async () => {
-          await createStream();
           await init(window.config.authType);
           videoDiv.style.display = 'block';
           streamIdDisplay.style.display = 'block';

@@ -94,9 +94,6 @@ async function encoder(vc, VideoClient) {
       const broadcast = call.broadcast(mediaStreamController, broadcastOptions);
       // Set broadcasting to true.
       broadcasting = true;
-      // Starts polling for viewers watching the broadcast.
-      // The list of viewers returned from the server is then displayed in the viewers div.
-      // startPollingForViewers(call.id);
       document.getElementById("viewer").style.display = "block";
     }
     // If you are broadcasting and want to end the broadcast.
@@ -105,9 +102,6 @@ async function encoder(vc, VideoClient) {
       call.dispose();
       // Set broadcasting to false.
       broadcasting = false;
-      
-      stopPollingForViewers(call.id);
-      clearViewers();
     }
   }
 
