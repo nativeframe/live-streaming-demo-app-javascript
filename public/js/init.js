@@ -1,5 +1,5 @@
-// Authenticates the user and creates the VideoClient instance
-async function auth(authType) {
+// Creates the VideoClient options and initializes the VideoClient instance
+async function init(authType) {
     if (
         window.config.backendEndpoint === undefined || 
         window.config.backendEndpoint === '' ||
